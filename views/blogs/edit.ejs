@@ -1,0 +1,19 @@
+<%- include("../partials/navbar") %>
+<link rel="stylesheet" href="/css/style.css">
+<div class="container">
+<div class="create">
+<h2>Edit Blog</h2>
+
+<form action="/blogs/<%= blog._id %>/update" method="POST">
+  <b><label>Title:</label></b>
+  <input type="text" name="title" value="<%= blog.title %>" />
+  <b><label>Content:</label></b>
+  <textarea name="content"><%= blog.content %></textarea>
+  <br/><br/>
+  <button>Update</button>
+  <button onclick="history.back()" style="margin-bottom:15px;">
+    ← Back
+  </button>
+</form>
+</div>
+</div>

@@ -1,0 +1,23 @@
+<%- include("../partials/navbar") %>
+<link rel="stylesheet" href="/css/style.css">
+<div class="container">
+  <div class="create">
+  <h2>Create Blog</h2>
+
+  <form action="/blogs" method="POST" enctype="multipart/form-data">
+    <b><label>Title:</label></b>
+  <input type="text" name="title" placeholder="Title" required>
+  <b><label>Content:</label></b>
+  <textarea name="content" placeholder="Content" required></textarea>
+  <b><label>Images:</label></b>
+  <input type="file" name="images" multiple>
+
+  <button type="submit">Post</button>
+  <button onclick="history.back()" style="margin-bottom:15px;">
+    ← Back
+  </button>
+  </form>
+  </div>
+  
+</div>
+

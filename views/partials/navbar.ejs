@@ -1,0 +1,32 @@
+<nav>
+  <div class="logo">
+    <a href="/">GK</a>
+  </div>
+  <div>
+  <input
+  type="text"
+  id="blogSearch"
+  placeholder="Search blogs..."
+  class="search-input"
+/></div>
+
+  <div>
+    <% if (!user) { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } else { %>
+      <span>Hello, <%= user.name %></span>
+      <a href="/blogs/new">New Blog</a>
+      <a href="/logout">Logout</a>
+    <% } %>
+  </div>
+  <div class="bell">
+  <button onclick="toggleBell()">🔔</button>
+  <div id="bell-menu" class="bell-menu">
+    <% notifications.forEach(n => { %>
+      <a href="<%= n.link %>"><%= n.message %></a>
+    <% }) %>
+  </div>
+</div>
+
+</nav>

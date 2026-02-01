@@ -1,0 +1,157 @@
+<%- include("partials/navbar") %>
+<link rel="stylesheet" href="/css/style.css">
+
+<div class="container">
+
+  <% if (!blogs || blogs.length === 0) { %>
+    <p>No blogs yet</p>
+  <% } %>
+
+  <!-- SKELETON LOADER -->
+  <div id="skeletons">
+    <div class="blog-card skeleton" style="height:180px;"></div>
+    <div class="blog-card skeleton" style="height:180px;"></div>
+  </div>
+
+  <!-- REAL CONTENT -->
+  <div id="real-content" style="display:none;">
+    <% blogs.forEach(blog => { %>
+      <div class="blog-card">
+
+        <!-- AUTHOR INFO -->
+        <div class="author">
+          <div class="avatar"><%= blog.author.name[0] %></div>
+          <div>
+            <strong><%= blog.author.name %></strong><br>
+            <small><%= blog.author.profession %></small>
+          </div>
+        </div>
+
+        <!-- BLOG TITLE -->
+        <h2>
+          <a href="/blogs/<%= blog._id %>" style="text-decoration:none;">
+            <%= blog.title %>
+          </a>
+        </h2>
+        <div class="images">
+        <!-- BLOG IMAGES (FIXED) -->
+        <% if (blog.images && blog.images.length > 0) { %>
+          <% blog.images.forEach(img => { %>
+            <img src="/uploads/<%= img %>" alt="blog image" class="img">
+          <% }) %>
+        <% } %>
+        </div>
+        <!-- BLOG CONTENT -->
+        <div class="sub-blog-card">
+          <p><%= blog.content %></p>
+        </div>
+       
+        <!-- BLOG OWNER ACTIONS -->
+        <% if (user && user._id.toString() === blog.author._id.toString()) { %>
+          <form action="/blogs/<%= blog._id %>/edit" method="GET" style="display:inline;">
+            <button>Edit</button>
+          </form>
+
+          <form action="/blogs/<%= blog._id %>/delete" method="POST" style="display:inline;">
+            <button>Delete</button>
+          </form>
+        <% } %>
+
+        <!-- LIKE & COMMENT COUNTS -->
+        <div class="interaction" style="margin-top:10px;">
+          ❤️ <span class="like-count"><%= blog.likesCount || 0 %></span> Likes
+          &nbsp; | &nbsp;
+          💬 <%= blog.commentsCount || 0 %> Comments
+        </div>
+
+        <!-- COMMENTS LIST -->
+        <% if (blog.comments && blog.comments.length > 0) { %>
+          <div class="comments">
+            <% blog.comments.forEach(c => { %>
+              <div class="comment">
+                <p>
+                  <strong><%= c.user.name %>:</strong>
+                  <%= c.text %>
+
+                  <% if (user && user._id.toString() === c.user._id.toString()) { %>
+                    <form action="/comment/<%= c._id %>/delete" method="POST" style="display:inline;">
+                      <button type="submit" style="background:red;">Delete</button>
+                    </form>
+                  <% } %>
+                </p>
+
+                <% if (user) { %>
+                  <button onclick="showReply('<%= c._id %>')">Reply</button>
+
+                  <form
+                    class="comment-form"
+                    data-blog="<%= blog._id %>"
+                    data-parent="<%= c._id %>"
+                    id="reply-<%= c._id %>"
+                    style="display:none;">
+                    <input name="text" placeholder="Reply..." />
+                    <button type="submit">Reply</button>
+                  </form>
+                <% } %>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <!-- LIKE & COMMENT ACTIONS -->
+        <div class="interaction">
+          <% if (user) { %>
+            <button class="like-btn" data-blog="<%= blog._id %>">
+              ❤️ Like
+            </button>
+
+            <form class="comment-form" data-blog="<%= blog._id %>">
+              <input name="text" placeholder="Write comment (optional)" />
+              <button type="submit">Post</button>
+            </form>
+          <% } else { %>
+            <p><a href="/login">Login</a> to like or comment</p>
+          <% } %>
+        </div>
+
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- JS FILES -->
+<script src="/js/like.js"></script>
+<script src="/js/comment.js"></script>
+
+<script>
+  window.addEventListener("load", () => {
+    document.getElementById("skeletons")?.remove();
+    document.getElementById("real-content").style.display = "block";
+  });
+
+  function showReply(id) {
+    const form = document.getElementById("reply-" + id);
+    if (form) {
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("blogSearch");
+    const blogCards = document.querySelectorAll(".blog-card");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+      const searchValue = this.value.toLowerCase();
+
+      blogCards.forEach(card => {
+        const titleEl = card.querySelector("h2 a");
+        if (!titleEl) return;
+
+        const title = titleEl.innerText.toLowerCase();
+        card.style.display = title.includes(searchValue) ? "block" : "none";
+      });
+    });
+  });
+</script>

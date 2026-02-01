@@ -1,0 +1,68 @@
+<%- include("../partials/navbar") %>
+<link rel="stylesheet" href="/css/style.css">
+
+<div class="container">
+
+  <!-- BACK BUTTON -->
+  <button onclick="history.back()" style="margin-bottom:15px;">
+    ← Back
+  </button>
+
+  <div class="blog-card">
+
+    <div class="author">
+      <div class="avatar"><%= blog.author.name[0] %></div>
+      <div>
+        <strong><%= blog.author.name %></strong><br>
+        <small><%= blog.author.profession %></small>
+      </div>
+    </div>
+
+    <h2><%= blog.title %></h2>
+    <div class="content1">
+      <p><%= blog.content %></p>
+    </div>
+
+    <div class="images">
+        <!-- BLOG IMAGES (FIXED) -->
+        <% if (blog.images && blog.images.length > 0) { %>
+          <% blog.images.forEach(img => { %>
+            <img src="/uploads/<%= img %>" alt="blog image" class="img">
+          <% }) %>
+        <% } %>
+    </div>
+
+    <div class="interaction">
+        <button class="like-btn" data-blog="<%= blog._id %>">
+  ❤️        <%= blog.likesCount %>Likes
+        </button>
+
+      &nbsp; | &nbsp;
+      💬 <%= blog.commentsCount %> Comments
+    </div>
+
+    <!-- COMMENTS (VISIBLE TO ALL) -->
+    <% if (blog.comments.length) { %>
+      <div class="comments">
+        <% blog.comments.forEach(c => { %>
+          <p>
+            <strong><%= c.user.name %>:</strong>
+            <%= c.text %>
+          </p>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <!-- COMMENT FORM -->
+    <% if (user) { %>
+      <form action="/comment/<%= blog._id %>" method="POST">
+        <input name="text" placeholder="Write comment (optional)" />
+        <button>Post</button>
+      </form>
+    <% } else { %>
+      <p><a href="/login">Login</a> to comment</p>
+    <% } %>
+
+  </div>
+
+</div>
