@@ -67,7 +67,7 @@ app.set("views", path.join(__dirname, "views"));
 // ==================
 app.use("/", require("./routes/auth"));
 app.use("/", require("./routes/blog"));
-app.use("/", require("./routes/follow"));
+// app.use("/", require("./routes/follow"));
 app.use("/", require("./routes/profile"));
 app.use("/", require("./routes/like"));
 app.use("/", require("./routes/comment"));
@@ -78,3 +78,4 @@ app.use("/", require("./routes/comment"));
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000");
 });
+
